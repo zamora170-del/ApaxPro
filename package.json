@@ -1,0 +1,22 @@
+
+{
+  "name": "apaxpro-pwa",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "zustand": "^4",
+    "idb": "^8",
+    "bcryptjs": "^2"
+  },
+  "devDependencies": {
+    "vite": "^5",
+    "typescript": "^5",
+    "tailwindcss": "^3"
+  }
+}

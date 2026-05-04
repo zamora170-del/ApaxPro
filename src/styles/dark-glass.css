@@ -1,0 +1,18 @@
+
+:root {
+  --bg: linear-gradient(135deg,#0a0a0f,#1a1a2e);
+  --glass: rgba(255,255,255,0.05);
+  --accent:#00d4ff;
+}
+
+body {
+  background: var(--bg);
+  color:white;
+}
+
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  padding:20px;
+  border-radius:12px;
+}
