@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  font-optical-sizing: auto;
+}
+
+code, .font-mono {
+  font-family: "DM Mono", "Courier New", monospace;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  body { @apply bg-slate-50 text-slate-900 antialiased; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-slate-100; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/60 shadow-sm;
+  }
+}
+
+/* Smooth page transitions */
+.page-enter { animation: pageEnter 0.18s ease; }
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Table row hover */
+.table-row-hover:hover { @apply bg-indigo-50/50; cursor: pointer; }
+
+/* Status dot pulse for "listo" */
+.pulse-green { animation: pulseGreen 2s infinite; }
+@keyframes pulseGreen {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}

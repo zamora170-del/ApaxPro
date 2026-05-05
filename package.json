@@ -1,22 +1,25 @@
-
 {
-  "name": "apaxpro-pwa",
-  "version": "1.0.0",
+  "name": "taller-reparaciones-pwa",
+  "private": true,
+  "version": "5.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "zustand": "^4",
-    "idb": "^8",
-    "bcryptjs": "^2"
+    "lucide-react": "^0.383.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "vite": "^5",
-    "typescript": "^5",
-    "tailwindcss": "^3"
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.10"
   }
 }
