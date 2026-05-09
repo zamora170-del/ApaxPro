@@ -3,7 +3,7 @@
 // DB: localStorage (espejo fiel del schema SQLite del prompt)
 // Lógica de negocio: sección 6 y 7 del prompt
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   LayoutDashboard, Users, ClipboardList, Package, BookOpen,
   DollarSign, BarChart3, Settings, LogOut, Menu, X, Bell,
@@ -12,7 +12,8 @@ import {
   Shield, Database, Palette, Building2, Edit2, Trash2, Lock,
   Unlock, Download, RefreshCw, TrendingUp, TrendingDown,
   Banknote, Save, Camera, ArrowUpRight, ArrowDownRight, Check,
-  AlertCircle, Filter, CreditCard, FileText, Star
+  AlertCircle, Filter, CreditCard, FileText, Star,
+  Activity, Upload
 } from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -537,12 +538,12 @@ function Button({ children, onClick, variant="primary", size="md", className="",
     </button>
   );
 }
-function Input({ label, value, onChange, type="text", placeholder, required, disabled, className="", hint, readOnly }) {
+function Input({ label, value, onChange, type="text", placeholder, required, disabled, className="", hint, readOnly, onKeyDown }) {
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       {label && <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">{label}{required && <span className="text-red-500 ml-1">*</span>}</label>}
       <input type={type} value={value ?? ""} onChange={e => onChange?.(e.target.value)} placeholder={placeholder}
-        disabled={disabled} required={required} readOnly={readOnly}
+        disabled={disabled} required={required} readOnly={readOnly} onKeyDown={onKeyDown}
         className="px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white disabled:bg-slate-50 disabled:text-slate-400 transition" />
       {hint && <p className="text-xs text-slate-400">{hint}</p>}
     </div>
@@ -1422,7 +1423,7 @@ function Inventario({ user }) {
     if (!cant || cant <= 0) { alert("Cantidad debe ser > 0"); return; }
     const rep = DB.getArr(DB.KEYS.REPUESTOS).find(r => r.id === ajusteModal.id);
     // Validar stock no negativo en ajuste_salida
-    if (ajusteForm.tipo === "ajuste_salida" && rep.stock < cant) { alert("Stock insuficiente para ajuste de salida."); return; }
+    if ((ajusteForm.tipo === "ajuste_salida" || ajusteForm.tipo === "perdida") && rep.stock < cant) { alert("Stock insuficiente para ese ajuste."); return; }
     // Kardex (inmutable — solo push)
     const kardex = DB.getArr(DB.KEYS.KARDEX);
     kardex.push({ id: DB.nextId(DB.KEYS.KARDEX), repuesto_id: ajusteModal.id, tipo: ajusteForm.tipo, cantidad: cant, orden_id: null, usuario_id: user.id, motivo: ajusteForm.motivo, created_at: todayISO() });
@@ -1494,9 +1495,9 @@ function Inventario({ user }) {
             { key:"marca",   label:"Marca" },
             { key:"modelo",  label:"Modelo" },
             { key:"calidad", label:"Calidad",  render:v=><Badge className={CALIDAD_COLORS[v] || "bg-slate-100 text-slate-600"}>{v}</Badge> },
-            { key:"stock",   label:"Stock",    render:(v,r)=><span className="font-bold">{v}</span> },
-            { key:"stock_reservado", label:"Reservado", render:v=><span className="text-amber-600 font-semibold">{v}</span> },
-            { key:"stock",   label:"Disponible", render:(v,r)=>{const d=v-r.stock_reservado;return <span className={`font-bold ${d<=stockMin?"text-red-600":d<=stockMin*2?"text-amber-600":"text-emerald-600"}`}>{d}</span>;} },
+            { key:"stock",          label:"Stock",     render:(v,r)=><span className="font-bold">{v}</span> },
+            { key:"stock_reservado",label:"Reservado", render:v=><span className="text-amber-600 font-semibold">{v}</span> },
+            { key:"stock_disp",     label:"Disponible",render:(_,r)=>{const d=r.stock-r.stock_reservado;return <span className={`font-bold ${d<=stockMin?"text-red-600":d<=stockMin*2?"text-amber-600":"text-emerald-600"}`}>{d}</span>;} },
             { key:"precio_venta", label:"Precio venta", render:v=><span className="font-semibold text-indigo-700">{fmt(v)}</span> },
             { key:"ubicacion",    label:"Ubic.",  render:v=>v?<Badge className="bg-slate-100 text-slate-600">{v}</Badge>:"—" },
             { key:"acciones",     label:"", render:(_,row)=>(
